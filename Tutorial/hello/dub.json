@@ -1,0 +1,9 @@
+{
+	"name": "hello",
+	"authors": [
+		"Tae Geun KIm"
+	],
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2018, Tae Geun KIm",
+	"license": "proprietary"
+}
