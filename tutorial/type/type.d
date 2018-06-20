@@ -1,6 +1,6 @@
 module tutorial.type.type;
 
-void main(string[] args) {
+void main() {
     import std.stdio : writeln;
 
     const int b = 7_000_000;

@@ -1,6 +1,6 @@
 module tutorial.mutability.mut;
 
-void main(string[] args) {
+void main() {
     import std.stdio : writeln;
 
     int m = 100;
