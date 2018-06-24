@@ -2,9 +2,12 @@ module algorithm.sieve;
 
 void main() {
     import std.stdio : writeln;
-    markSieve(50).writeln;
+    sieve(1000).writeln;
 }
 
+/++
+    markSieve marks boolean flag to determine prime numbers.
++/
 bool[] markSieve(int l) {
     import std.math : sqrt;
     
@@ -12,7 +15,10 @@ bool[] markSieve(int l) {
     marks.length = l;
     int m = cast(int) sqrt(cast(double)l);
 
+    // Initialize with True
     marks[] = true;
+
+    // For 1, 2, 3
     marks[0] = false;
     marks[1] = true;
     marks[2] = true;
@@ -22,9 +28,10 @@ bool[] markSieve(int l) {
         marks[2*i + 1] = false;
     }
 
+    // Main Mark Sieve
     int n = 3;
     while (n <= m) {
-        int factor = 2 * n;
+        const int factor = 2 * n;
         int multiplier = n + factor;
         while (multiplier <= l) {
             marks[multiplier - 1] = false;
@@ -34,4 +41,16 @@ bool[] markSieve(int l) {
     }
 
     return marks;
+}
+
+int[] sieve(int n) {
+    bool[] ms = markSieve(n);
+    int[] result;
+    foreach(i; 0 .. n) {
+        if (ms[i]) {
+            result ~= i+1;
+        }
+    }
+    
+    return result;
 }
