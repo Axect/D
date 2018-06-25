@@ -25,13 +25,13 @@ bool[] markSieve(int l) {
 
     // Remove even numbers
     foreach(i; 1 .. cast(int) l/2) {
-        marks[2*i + 1] = false;
+        marks[i + i + 1] = false;
     }
 
     // Main Mark Sieve
     int n = 3;
     while (n <= m) {
-        const int factor = 2 * n;
+        const int factor = n + n;
         int multiplier = n + factor;
         while (multiplier <= l) {
             marks[multiplier - 1] = false;
