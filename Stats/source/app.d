@@ -14,4 +14,5 @@ void main() {
     b.pow(2).writeln;
     b.sqrt.writeln;
     b.fmap(x => 2 * x - 1).writeln;
+    b.dot(b).writeln;
 }

@@ -204,6 +204,17 @@ struct Vector {
     return temp;
   }
 
+  /++
+    Inner Product
+  +/
+  double dot(Vector rhs) {
+    double s = 0;
+    foreach(i; 0 .. this.comp.length) {
+      s += cast(double)this[i] * cast(double)rhs[i];
+    }
+    return s;
+  }
+
   // ===========================================================================
   // Statistics Operator
   // ===========================================================================
