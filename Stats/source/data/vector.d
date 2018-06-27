@@ -252,3 +252,49 @@ struct Vector {
     return sqrt(var);
   }
 }
+
+// =============================================================================
+// Matrix
+// =============================================================================
+struct Matrix {
+  Vector val;
+  long row;
+  long col;
+  bool byRow;
+  
+  this(double[] vec, long r, long c, bool byrow = false) {
+    this.val = Vector(vec);
+    this.row = r;
+    this.col = c;
+    this.byRow = byrow;
+  }
+
+  this(Vector vec, long r, long c, bool byrow = false) {
+    this.val = vec;
+    this.row = r;
+    this.col = c;
+    this.byRow = byrow;
+  }
+
+  this(double[][] mat) {
+    this.val = mat.flatten;
+    this.row = mat.length;
+    this.col = mat[0].length;
+    this.byRow = true;
+  }
+
+  void toString(scope void delegate(const char[]) sink) const {
+    sink("Hi");
+  }
+}
+
+double[] flatten(double[][] mat) {
+  double[] s;
+  s.length = mat.length;
+  foreach(vecs; mat) {
+    foreach(elem; vecs) {
+      s ~= elem;
+    }
+  }
+  return s;
+}

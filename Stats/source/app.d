@@ -15,4 +15,7 @@ void main() {
     b.sqrt.writeln;
     b.fmap(x => 2 * x - 1).writeln;
     b.dot(b).writeln;
+
+    auto c = Matrix(b, 1, 10);
+    c.writeln;
 }
