@@ -16,6 +16,7 @@ void main() {
     b.dot(b).writeln;
 
     auto c = Matrix([1,2,3,4], 2, 2, true);
+    auto d = Matrix([1,2,3,4,5,6], 2, 3, true);
     c.writeln;
     c[1,1].writeln;
     writeln(c + 1);
@@ -24,4 +25,7 @@ void main() {
     writeln(c / 2);
     writeln(c ^^ 2);
     writeln(c + c);
+    writeln(c % c);
+    d.writeln;
+    writeln(c % d);
 }

@@ -395,6 +395,30 @@ struct Matrix {
           temp.val.comp[i] /= rhs.val.comp[i];
         }
         break;
+      case "%":
+        import std.parallelism : taskPool, parallel;
+        assert(this.col == rhs.row);
+        
+        auto m = this.data;
+        auto n = rhs.data;
+        auto l1 = this.row;
+        auto l2 = rhs.col;
+        auto l = l1 * l2;
+
+        Matrix temp2 = Matrix(Vector(1, l, 1), l1, l2, this.byRow);
+        auto target = temp2.data;
+
+        foreach(i, ref rows; taskPool.parallel(target)) {
+          foreach(j; 0 .. l2) {
+            double s = 0;
+            foreach(k; 0 .. this.col) {
+              s += m[i][k] * n[k][j];
+            }
+            rows[j] = s;
+          }
+        }
+        temp = Matrix(target);
+        break;
       default:
         break;
     }
