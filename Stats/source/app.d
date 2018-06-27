@@ -22,5 +22,6 @@ void main() {
     writeln(c - 1);
     writeln(c * 2);
     writeln(c / 2);
+    writeln(c ^^ 2);
     writeln(c + c);
 }

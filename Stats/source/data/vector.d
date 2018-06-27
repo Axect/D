@@ -110,31 +110,6 @@ struct Vector {
   Vector sqrt() {
     return this.fmap(t => t.sqrt);
   }
-
-  Vector pow(T)(T x) {
-    auto X = cast(double) x;
-    return this.fmap((double t) => t ^^ X);
-  }
-
-  Vector add(T)(T x) {
-    auto X = cast(double) x;
-    return this.fmap(t => t + X);
-  }
-
-  Vector sub(T)(T x) {
-    auto X = cast(double) x;
-    return this.fmap(t => t - X);
-  }
-
-  Vector mul(T)(T x) {
-    auto X = cast(double) x;
-    return this.fmap(t => t * X);
-  }
-
-  Vector div(T)(T x) {
-    auto X = cast(double) x;
-    return this.fmap(t => t / X);
-  }
   // ===========================================================================
   // Operator Overloading
   // ===========================================================================
@@ -263,6 +238,9 @@ struct Vector {
 // =============================================================================
 // Matrix
 // =============================================================================
+/++
+  Matrix Structure
++/
 struct Matrix {
   import std.array : join;
 
