@@ -25,6 +25,13 @@ struct Vector {
     this.comp = vec;
   }
 
+  void toString(scope void delegate(const(char)[]) sink) const {
+    import std.stdio : write;
+
+    sink("Vector ");
+    this.comp.write;
+  }
+
   // ===========================================================================
   // Basic Operator
   // ===========================================================================
@@ -134,7 +141,7 @@ struct Vector {
   /++
     Getter
   +/
-  double opIndex(size_t i) {
+  double opIndex(size_t i) const {
     return this.comp[i];
   }
 
@@ -257,16 +264,23 @@ struct Vector {
 // Matrix
 // =============================================================================
 struct Matrix {
+  import std.array : join;
+
   Vector val;
   long row;
   long col;
   bool byRow;
+  double[][] data;
   
+  // ===========================================================================
+  // Constructor
+  // ===========================================================================
   this(double[] vec, long r, long c, bool byrow = false) {
     this.val = Vector(vec);
     this.row = r;
     this.col = c;
     this.byRow = byrow;
+    this.data = this.matForm;
   }
 
   this(Vector vec, long r, long c, bool byrow = false) {
@@ -274,27 +288,139 @@ struct Matrix {
     this.row = r;
     this.col = c;
     this.byRow = byrow;
+    this.data = this.matForm;
   }
 
   this(double[][] mat) {
-    this.val = mat.flatten;
+    this.val = Vector(mat.join);
     this.row = mat.length;
     this.col = mat[0].length;
     this.byRow = true;
+    this.data = mat;
   }
 
-  void toString(scope void delegate(const char[]) sink) const {
-    sink("Hi");
+  this(Matrix mat) {
+    this.val = mat.val;
+    this.row = mat.row;
+    this.col = mat.col;
+    this.byRow = mat.byRow;
+    this.data = mat.data;
   }
-}
 
-double[] flatten(double[][] mat) {
-  double[] s;
-  s.length = mat.length;
-  foreach(vecs; mat) {
-    foreach(elem; vecs) {
-      s ~= elem;
+  // ===========================================================================
+  // String
+  // ===========================================================================
+  void toString(scope void delegate(const(char)[]) sink) const {
+    import std.stdio : write;
+
+    sink("Matrix ");
+    this.data.write;
+  }
+
+  double[][] matForm() const {
+    long c = this.col;
+    long r = this.row;
+    double[][] mat;
+    mat.length = r;
+
+    if (byRow) {
+      foreach(i; 0 .. r) {
+        mat[i].length = c;
+        foreach(j; 0 .. c) {
+          long k = c*i + j;
+          mat[i][j] = this.val[k];
+        }
+      }
+    } else {
+      foreach(j; 0 .. c) {
+        foreach(i; 0 .. r) {
+          mat[i].length = c;
+          long k = r*j + i;
+          mat[i][j] = this.val[k];
+        }
+      }
     }
+    return mat;
   }
-  return s;
+
+  void refresh() {
+    this.data = this.matForm;
+  }
+  // ===========================================================================
+  // Operator Overloading
+  // ===========================================================================
+  /++
+    Getter
+  +/
+  double opIndex(size_t i, size_t j) const {
+    return this.data[i][j];
+  }
+
+  /++
+    Setter
+  +/
+  void opIndexAssign(double value, size_t i, size_t j) {
+    this.data[i][j] = value;
+  }
+
+  /++
+    Binary Operator with Scalar
+  +/
+  Matrix opBinary(string op)(double rhs) {
+    Matrix temp = Matrix(this.data);
+    switch(op) {
+      case "+":
+        temp.val.add_void(rhs);
+        break;
+      case "-":
+        temp.val.sub_void(rhs);
+        break;
+      case "*":
+        temp.val.mul_void(rhs);
+        break;
+      case "/":
+        temp.val.div_void(rhs);
+        break;
+      case "^^":
+        temp.val.pow_void(rhs);
+        break;
+      default:
+        break;
+    }
+    temp.refresh;
+    return temp;
+  }
+
+  /++
+    Binary Operator with Matrix
+  +/
+  Matrix opBinary(string op)(Matrix rhs) {
+    Matrix temp = Matrix(this.val, this.row, this.col, this.byRow);
+    switch(op) {
+      case "+":
+        foreach(i; 0 .. temp.val.length) {
+          temp.val.comp[i] += rhs.val.comp[i];
+        }
+        break;
+      case "-":
+        foreach(i; 0 .. temp.val.length) {
+          temp.val.comp[i] -= rhs.val.comp[i];
+        }
+        break;
+      case "*":
+        foreach(i; 0 .. temp.val.length) {
+          temp.val.comp[i] *= rhs.val.comp[i];
+        }
+        break;
+      case "/":
+        foreach(i; 0 .. temp.val.length) {
+          temp.val.comp[i] /= rhs.val.comp[i];
+        }
+        break;
+      default:
+        break;
+    }
+    temp.refresh;
+    return temp;
+  }
 }
