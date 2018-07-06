@@ -13,6 +13,9 @@ struct Vector {
   // ===========================================================================
   // Constructor
   // ===========================================================================
+  /++
+    Like iota
+  +/
   this(double start, double end, double step = 1) {
     long l = cast(long)((end - start + 1) / step);
     this.comp.length = l;
@@ -21,6 +24,16 @@ struct Vector {
     }
   }
 
+  /++
+    Uninitialized
+  +/
+  this(long l) {
+    this.comp.length = l;
+  }
+
+  /++
+    array to Vector
+  +/
   this(double[] vec) {
     this.comp = vec;
   }
@@ -258,6 +271,17 @@ struct Matrix {
     this.row = r;
     this.col = c;
     this.byRow = byrow;
+    this.data = this.matForm; // heavy cost
+  }
+
+  /++
+    Uninitialized Matrix
+  +/
+  this(long r, long c, bool byrow = false) {
+    this.val = Vector(r*c);
+    this.row = r;
+    this.col = c;
+    this.byRow = byrow;
     this.data = this.matForm;
   }
 
@@ -266,15 +290,15 @@ struct Matrix {
     this.row = r;
     this.col = c;
     this.byRow = byrow;
-    this.data = this.matForm;
+    this.data = this.matForm; // heavy cost
   }
 
   this(double[][] mat) {
-    this.val = Vector(mat.join);
+    this.val = Vector(mat.join); // join is cheap
     this.row = mat.length;
     this.col = mat[0].length;
     this.byRow = true;
-    this.data = mat;
+    this.data = mat; // no cost
   }
 
   this(Matrix mat) {
@@ -321,6 +345,9 @@ struct Matrix {
     return mat;
   }
 
+  /++
+    Reduce cost
+  +/
   void refresh() {
     this.data = this.matForm;
   }
@@ -345,7 +372,7 @@ struct Matrix {
     Binary Operator with Scalar
   +/
   Matrix opBinary(string op)(double rhs) {
-    Matrix temp = Matrix(this.data);
+    Matrix temp = Matrix(this.data); // No Cost
     switch(op) {
       case "+":
         temp.val.add_void(rhs);
@@ -373,7 +400,7 @@ struct Matrix {
     Binary Operator with Matrix
   +/
   Matrix opBinary(string op)(Matrix rhs) {
-    Matrix temp = Matrix(this.val, this.row, this.col, this.byRow);
+    Matrix temp = Matrix(this.val, this.row, this.col, this.byRow); // Guess heavy cost but..
     switch(op) {
       case "+":
         foreach(i; 0 .. temp.val.length) {
@@ -396,16 +423,15 @@ struct Matrix {
         }
         break;
       case "%":
-        import std.parallelism : taskPool, parallel;
+        import std.parallelism : taskPool, parallel; // Perfect Parallel!
         assert(this.col == rhs.row);
         
         auto m = this.data;
         auto n = rhs.data;
         auto l1 = this.row;
         auto l2 = rhs.col;
-        auto l = l1 * l2;
 
-        Matrix temp2 = Matrix(Vector(1, l, 1), l1, l2, this.byRow);
+        Matrix temp2 = Matrix(l1, l2, this.byRow); // Uninitialized Matrix
         auto target = temp2.data;
 
         foreach(i, ref rows; taskPool.parallel(target)) {
