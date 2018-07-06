@@ -431,8 +431,7 @@ struct Matrix {
         auto l1 = this.row;
         auto l2 = rhs.col;
 
-        Matrix temp2 = Matrix(l1, l2, this.byRow); // Uninitialized Matrix
-        auto target = temp2.data;
+        auto target = initMat(l1, l2);
 
         foreach(i, ref rows; taskPool.parallel(target)) {
           foreach(j; 0 .. l2) {
@@ -452,15 +451,16 @@ struct Matrix {
     return temp;
   }
 
-  /++
-    Matrix Utils
-  +/
+  // ===========================================================================
+  // Matrix Utils
+  // ===========================================================================
+
   Matrix transpose() { // Parallel
     auto l1 = this.row;
     auto l2 = this.col;
     auto m = this.data;
-    Matrix temp = Matrix(l2, l1, this.byRow); // Uninitialized
-    auto target = temp.data;
+    Matrix temp;
+    auto target = initMat(l2, l1);
     foreach(i, ref rows; taskPool.parallel(target)) {
       foreach(j; 0 .. l1) {
         rows[j] = m[j][i];
@@ -502,7 +502,64 @@ struct Matrix {
     Matrix U = Matrix(u);
     return tuple(L, U);
   }
+
+  Matrix block(int quad) {
+    auto r = this.row;
+    auto c = this.col;
+    assert(r == c);
+
+    auto l = r / 2;
+    auto m = this.data;
+
+    Matrix target;
+    
+    switch(quad) {
+      case 1:
+        double[][] temp = initMat(l,l);
+        foreach(i; 0 .. l) {
+          foreach(j; 0 .. l) {
+            temp[i][j] = m[i][j];
+          }
+        }
+        target = Matrix(temp);
+        break;
+      case 2:
+        double[][] temp = initMat(l,r - l);
+        foreach(i; 0 .. l) {
+          foreach(j; l .. r) {
+            temp[i][j - l] = m[i][j];
+          }
+        }
+        target = Matrix(temp);
+        break;
+      case 3:
+        double[][] temp = initMat(r-l, l);
+        foreach(i; l .. r) {
+          foreach(j; 0 .. l) {
+            temp[i - l][j] = m[i][j];
+          }
+        }
+        target = Matrix(temp);
+        break;
+      case 4:
+        double[][] temp = initMat(r-l, r-l);
+        foreach(i; l .. r) {
+          foreach(j; l .. r) {
+            temp[i - l][j - l] = m[i][j];
+          }
+        }
+        target = Matrix(temp);
+        break;
+      default:
+        break;
+    }
+    return target;
+  }
 }
+
+// =============================================================================
+// Array of Array Utils
+// =============================================================================
 
 double[][] initMat(long r, long c) {
   double[][] m;

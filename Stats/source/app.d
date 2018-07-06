@@ -36,4 +36,8 @@ void main() {
     Matrix u = res[1];
     l.writeln;
     u.writeln;
+    m.block(1).writeln;
+    m.block(2).writeln;
+    m.block(3).writeln;
+    m.block(4).writeln;
 }
