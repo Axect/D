@@ -477,7 +477,7 @@ struct Matrix {
     assert(this.row == this.col);
 
     double[][] m = this.data;
-    double[][] u = initMat(n,n);
+    double[][] u = zerosMat(n,n);
     double[][] l = eyeMat(n);
     u[0] = m[0];
 
@@ -514,9 +514,19 @@ double[][] initMat(long r, long c) {
 }
 
 double[][] eyeMat(long l) {
-  double[][] m = initMat(l, l);
+  double[][] m = zerosMat(l, l);
   foreach(i; 0 .. l) {
     m[i][i] = 1;
+  }
+  return m;
+}
+
+double[][] zerosMat(long r, long c) {
+  double[][] m = initMat(r, c);
+  foreach(i, ref rows; m) {
+    foreach(j; 0 .. c) {
+      rows[j] = 0;
+    }
   }
   return m;
 }
