@@ -18,6 +18,7 @@ void main() {
     auto c = Matrix([1,2,3,4], 2, 2, true);
     auto d = Matrix([1,2,3,4,5,6], 2, 3, true);
     c.writeln;
+    c.transpose.writeln;
     c[1,1].writeln;
     writeln(c + 1);
     writeln(c - 1);

@@ -256,6 +256,7 @@ struct Vector {
 +/
 struct Matrix {
   import std.array : join;
+  import std.parallelism : taskPool, parallel; // Perfect Parallel!
 
   Vector val;
   long row;
@@ -422,8 +423,7 @@ struct Matrix {
           temp.val.comp[i] /= rhs.val.comp[i];
         }
         break;
-      case "%":
-        import std.parallelism : taskPool, parallel; // Perfect Parallel!
+      case "%": // Parallel Multiplication
         assert(this.col == rhs.row);
         
         auto m = this.data;
@@ -449,6 +449,24 @@ struct Matrix {
         break;
     }
     temp.refresh;
+    return temp;
+  }
+
+  /++
+    Matrix Utils
+  +/
+  Matrix transpose() {
+    auto l1 = this.row;
+    auto l2 = this.col;
+    auto m = this.data;
+    Matrix temp = Matrix(l2, l1, this.byRow); // Uninitialized
+    auto target = temp.data;
+    foreach(i, ref rows; taskPool.parallel(target)) {
+      foreach(j; 0 .. l1) {
+        rows[j] = m[j][i];
+      }
+    }
+    temp = Matrix(target);
     return temp;
   }
 }
