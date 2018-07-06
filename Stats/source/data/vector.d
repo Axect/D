@@ -455,7 +455,7 @@ struct Matrix {
   /++
     Matrix Utils
   +/
-  Matrix transpose() {
+  Matrix transpose() { // Parallel
     auto l1 = this.row;
     auto l2 = this.col;
     auto m = this.data;
@@ -469,4 +469,54 @@ struct Matrix {
     temp = Matrix(target);
     return temp;
   }
+
+  import std.typecons : tuple;
+
+  auto lu() {
+    auto n = this.row;
+    assert(this.row == this.col);
+
+    double[][] m = this.data;
+    double[][] u = initMat(n,n);
+    double[][] l = eyeMat(n);
+    u[0] = m[0];
+
+    foreach(i; 0 .. n) {
+      foreach(k; i .. n) {
+        double s = 0;
+        foreach(j; 0 .. i) {
+          s += l[i][j] * u[j][k];
+        }
+        u[i][k] = m[i][k] - s;
+      }
+
+      foreach(k; i+1 .. n) {
+        double s = 0;
+        foreach(j; 0 .. i) {
+          s += l[k][j] * u[j][i];
+        }
+        l[k][i] = (m[k][i] - s) / u[i][i];
+      }
+    }
+    Matrix L = Matrix(l);
+    Matrix U = Matrix(u);
+    return tuple(L, U);
+  }
+}
+
+double[][] initMat(long r, long c) {
+  double[][] m;
+  m.length = r;
+  foreach(i; 0 .. r) {
+    m[i].length = c;
+  }
+  return m;
+}
+
+double[][] eyeMat(long l) {
+  double[][] m = initMat(l, l);
+  foreach(i; 0 .. l) {
+    m[i][i] = 1;
+  }
+  return m;
 }

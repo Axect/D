@@ -29,4 +29,11 @@ void main() {
     writeln(c % c);
     d.writeln;
     writeln(c % d);
+
+    auto m = Matrix([[2, -1, -2], [-4, 6, 3], [-4, -2, 8]]);
+    auto res = m.lu();
+    Matrix l = res[0];
+    Matrix u = res[1];
+    l.writeln;
+    u.writeln;
 }
