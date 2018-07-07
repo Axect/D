@@ -40,4 +40,6 @@ void main() {
     m.block(2).writeln;
     m.block(3).writeln;
     m.block(4).writeln;
+    c.det.writeln;
+    m.det.writeln;
 }

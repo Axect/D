@@ -455,6 +455,9 @@ struct Matrix {
   // Matrix Utils
   // ===========================================================================
 
+  /++
+    Transpose
+  +/
   Matrix transpose() { // Parallel
     auto l1 = this.row;
     auto l2 = this.col;
@@ -470,11 +473,21 @@ struct Matrix {
     return temp;
   }
 
+  /++
+    Check Square Matrix
+  +/
+  bool isSquare() {
+    return this.row == this.col;
+  }
+
   import std.typecons : tuple;
 
+  /++
+    LU Decomposition
+  +/
   auto lu() {
     auto n = this.row;
-    assert(this.row == this.col);
+    assert(this.isSquare);
 
     double[][] m = this.data;
     double[][] u = zerosMat(n,n);
@@ -503,10 +516,30 @@ struct Matrix {
     return tuple(L, U);
   }
 
+  /++
+    Determinant (Using LU Decomposition)
+  +/
+  double det() { // Use LU Decomposition
+    auto res = this.lu();
+    Matrix L = res[0];
+    Matrix U = res[1];
+    
+    double l = 1;
+    double u = 1;
+
+    foreach(i; 0 .. L.row) {
+      l *= L[i,i];
+      u *= U[i,i];
+    }
+    return l * u;
+  }
+
+  /++
+    Partitioning matrix
+  +/
   Matrix block(int quad) {
     auto r = this.row;
-    auto c = this.col;
-    assert(r == c);
+    assert(this.isSquare);
 
     auto l = r / 2;
     auto m = this.data;
