@@ -521,18 +521,25 @@ struct Matrix {
   +/
   double det() { // Use LU Decomposition
     auto res = this.lu();
-    Matrix L = res[0];
     Matrix U = res[1];
     
-    double l = 1;
     double u = 1;
 
-    foreach(i; 0 .. L.row) {
-      l *= L[i,i];
+    foreach(i; 0 .. U.row) {
       u *= U[i,i];
     }
-    return l * u;
+    return u;
   }
+
+  /++
+    Inverse
+  +/
+  // Matrix inv() {
+  //   auto res = this.lu();
+  //   Matrix L = res[0];
+  //   Matrix U = res[1];
+
+  // }
 
   /++
     Partitioning matrix
