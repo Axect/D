@@ -520,7 +520,7 @@ struct Matrix {
     Determinant (Using LU Decomposition)
   +/
   double det() { // Use LU Decomposition
-    auto res = this.lu();
+    auto res = this.lu;
     Matrix U = res[1];
     
     double u = 1;
