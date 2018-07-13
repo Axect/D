@@ -454,6 +454,27 @@ struct Matrix {
   // ===========================================================================
   // Matrix Utils
   // ===========================================================================
+  /++
+    True -> False
+  +/
+  Matrix makeFalse() {
+    assert(this.byRow);
+    double[] v_ref = this.val.comp; // Double array
+    auto r = this.row;
+    auto c = this.col;
+    auto l = r * c - 1;
+    
+    double[] v_con;
+    v_con.length = l + 1;
+
+    foreach(i; 0 .. l) {
+      auto s = (i * c) % l;
+      v_con[i] = v_ref[s];
+    }
+    v_con[l] = v_ref[l];
+
+    return Matrix(v_con, r, c);
+  }
 
   /++
     Transpose
@@ -596,6 +617,40 @@ struct Matrix {
     return target;
   }
 }
+
+// =============================================================================
+// Functions of vector or matrices
+// =============================================================================
+Vector cbind(Vector m, Vector n) {
+  import std.array : join;
+  
+  Vector container;
+
+  container.comp = join([m.comp, n.comp]);
+  return container;
+}
+
+Matrix cbind(Matrix m, Matrix n) {
+  assert(m.row == n.row);
+  Matrix container;
+  container.row = m.row;
+  container.col = m.col + n.col;
+  
+  if (m.byRow && n.byRow) {
+    m = m.makeFalse;
+    n = n.makeFalse;
+  } else if (n.byRow) {
+    n = n.makeFalse;
+  } else if (m.byRow) {
+    m = m.makeFalse;
+  }
+
+  container.val = cbind(m.val, n.val);
+  container.refresh;
+  return container;
+}
+
+
 
 // =============================================================================
 // Array of Array Utils
