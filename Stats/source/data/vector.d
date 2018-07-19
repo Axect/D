@@ -1,7 +1,5 @@
 module data.vector;
 
-import std.stdio : writeln;
-
 /++
   Vector is default class for Statistics
 +/
@@ -36,6 +34,16 @@ struct Vector {
   +/
   this(double[] vec) {
     this.comp = vec;
+  }
+
+  /++
+    Intialize with number
+  +/
+  this(double num, long l) {
+    this.comp.length = l;
+    foreach(i; 0 .. l) {
+      this.comp[i] = num;
+    }
   }
 
   void toString(scope void delegate(const(char)[]) sink) const {
@@ -129,7 +137,7 @@ struct Vector {
   /++
     Getter
   +/
-  double opIndex(size_t i) const {
+  pure double opIndex(size_t i) const {
     return this.comp[i];
   }
 
@@ -213,39 +221,39 @@ struct Vector {
   // ===========================================================================
   // Statistics Operator
   // ===========================================================================
-  pure double sum() const {
-    double s = 0;
-    foreach(e; this.comp) {
-      s += e;
-    }
-    return s;
-  }
+  // pure double sum() const {
+  //   double s = 0;
+  //   foreach(e; this.comp) {
+  //     s += e;
+  //   }
+  //   return s;
+  // }
   
-  pure double mean() const {
-    double s = 0;
-    double l = 0;
-    foreach(e; this.comp) {
-      l++;
-      s += e;
-    }
-    return s / l;
-  }
+  // pure double mean() const {
+  //   double s = 0;
+  //   double l = 0;
+  //   foreach(e; this.comp) {
+  //     l++;
+  //     s += e;
+  //   }
+  //   return s / l;
+  // }
 
-  pure double var() const {
-    double m = 0;
-    double l = 0;
-    double v = 0;
-    foreach(e; this.comp) {
-      l++;
-      m += e;
-      v += e ^^ 2;
-    }
-    return (v / l - (m / l)^^2) * l / (l - 1);
-  }
+  // pure double var() const {
+  //   double m = 0;
+  //   double l = 0;
+  //   double v = 0;
+  //   foreach(e; this.comp) {
+  //     l++;
+  //     m += e;
+  //     v += e ^^ 2;
+  //   }
+  //   return (v / l - (m / l)^^2) * l / (l - 1);
+  // }
 
-  pure double std() const {
-    return sqrt(var);
-  }
+  // pure double std() const {
+  //   return sqrt(var);
+  // }
 }
 
 // =============================================================================
@@ -308,6 +316,14 @@ struct Matrix {
     this.col = mat.col;
     this.byRow = mat.byRow;
     this.data = mat.data;
+  }
+
+  this(double num, long r, long c) {
+    this.val = Vector(num, r*c);
+    this.row = r;
+    this.col = c;
+    this.byRow = false;
+    this.data = this.matForm;
   }
 
   // ===========================================================================
@@ -560,7 +576,30 @@ struct Matrix {
   //   Matrix L = res[0];
   //   Matrix U = res[1];
 
+
   // }
+
+  Matrix invL() {
+    if (this.row == 1) {
+      return this;
+    } else if (this.row == 2) {
+      auto m = this.data;
+      m[1][0] = -this.data[1][0];
+      return Matrix(m);
+    } else {
+      auto l1 = this.block(1);
+      auto l2 = this.block(2);
+      auto l3 = this.block(3);
+      auto l4 = this.block(4);
+
+      auto m1 = l1.invL;
+      auto m2 = l2;
+      auto m4 = l4.invL;
+      auto m3 = (m4 % l3 % m1) * (-1);
+
+      return combine(m1, m2, m3, m4);
+    }
+  }
 
   /++
     Partitioning matrix
@@ -621,15 +660,41 @@ struct Matrix {
 // =============================================================================
 // Functions of vector or matrices
 // =============================================================================
+/++
+  Concate two Vectors to Vector
++/
 Vector cbind(Vector m, Vector n) {
   import std.array : join;
-  
+
   Vector container;
 
   container.comp = join([m.comp, n.comp]);
   return container;
 }
 
+/++
+  Concate two Vectors to Matrix
++/
+Matrix rbind(Vector m, Vector n) {
+  assert(m.length == n.length);
+  Vector v = cbind(m, n);
+
+  return Matrix(v, 2, m.length, true);
+}
+
+/++
+  Insert Vector to Matrix
++/
+Matrix rbind(Matrix m, Vector v) {
+  assert(m.col == v.length);
+  Matrix n = Matrix(v, 1, v.length, true);
+
+  return rbind(m, n);
+}
+
+/++
+  Concate two Matrix to Matrix with col direction
++/
 Matrix cbind(Matrix m, Matrix n) {
   assert(m.row == n.row);
   Matrix container;
@@ -650,6 +715,18 @@ Matrix cbind(Matrix m, Matrix n) {
   return container;
 }
 
+/++
+  Concate to Matrix to Matrix with row direction
++/
+Matrix rbind(Matrix m, Matrix n) {
+  assert(m.col == n.col);  
+  
+  import std.array : join;
+
+  auto mat = join([m.data, n.data]);
+
+  return Matrix(mat);
+}
 
 
 // =============================================================================
@@ -681,4 +758,47 @@ double[][] zerosMat(long r, long c) {
     }
   }
   return m;
+}
+
+/++
+  Combine
++/
+Matrix combine(Matrix p, Matrix q, Matrix r, Matrix s) {
+  auto a = p.data;
+  auto b = q.data;
+  auto c = r.data;
+  auto d = s.data;
+  
+  auto x1 = a[0].length;
+  auto x2 = b[0].length;
+  auto y1 = a.length;
+  auto y2 = c.length;
+
+  auto lx = x1 + x2;
+  auto ly = y1 + y2;
+
+  double[][] m;
+  m.length = ly;
+
+  foreach(i; 0 .. y1) {
+    m[i].length = lx;
+    foreach(j; 0 .. x1) {
+      m[i][j] = a[i][j];
+    }
+    foreach(j; x1 .. lx) {
+      m[i][j] = b[i][j - x1];
+    }
+  }
+
+  foreach(i; y1 .. ly) {
+    m[i].length = lx;
+    foreach(j; 0 .. x1) {
+      m[i][j] = c[i - y1][j];
+    }
+    foreach(j; x1 .. lx) {
+      m[i][j] = d[i - y1][j - x1];
+    }
+  }
+
+  return Matrix(m);
 }

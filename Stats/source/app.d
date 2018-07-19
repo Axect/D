@@ -5,18 +5,6 @@ import data.vector;
 void main() {
     import std.stdio : writeln;
 
-    auto a = Matrix([1,2,3,4], 2, 2, true);
-    a.writeln;
-    a.val.writeln;
-    a.byRow.writeln;
-    
-    auto b = a.makeFalse;
-    b.writeln;
-    b.val.writeln;
-    b.byRow.writeln;
-
-    cbind(a,b).writeln;
-    
     // auto b = Vector(1,20,2);
     // b.writeln;
     // writeln(b + 1);
@@ -55,4 +43,7 @@ void main() {
     m.block(4).writeln;
     // c.det.writeln;
     // m.det.writeln;
+    
+    auto L = Matrix([[1,0,0],[2,1,0],[3,4,1]]);
+    L.invL.writeln;
 }
