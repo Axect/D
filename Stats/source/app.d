@@ -42,16 +42,17 @@ void main() {
     // d.writeln;
     // writeln(c % d);
 
-    // auto m = Matrix([[2, -1, -2], [-4, 6, 3], [-4, -2, 8]]);
+    auto m = Matrix([[2, -1, -2], [-4, 6, 3], [-4, -2, 8]]);
+    m.writeln;
     // auto res = m.lu();
     // Matrix l = res[0];
     // Matrix u = res[1];
     // l.writeln;
     // u.writeln;
-    // m.block(1).writeln;
-    // m.block(2).writeln;
-    // m.block(3).writeln;
-    // m.block(4).writeln;
+    m.block(1).writeln;
+    m.block(2).writeln;
+    m.block(3).writeln;
+    m.block(4).writeln;
     // c.det.writeln;
     // m.det.writeln;
 }
