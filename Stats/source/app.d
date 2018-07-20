@@ -46,4 +46,7 @@ void main() {
     
     auto L = Matrix([[1,0,0],[2,1,0],[3,4,1]]);
     L.invL.writeln;
+
+    auto U = Matrix([[1,2,3], [0, 1, 5], [0, 0, 2]]);
+    U.invU.writeln;
 }
