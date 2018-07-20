@@ -52,4 +52,7 @@ void main() {
 
     auto a = Matrix([[1,2],[3,4]]);
     a.inv.writeln;
+
+    auto b = Matrix([[1,2,3],[5,1,2],[3,4,7]]);
+    b.inv.writeln;
 }
