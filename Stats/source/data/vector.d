@@ -513,7 +513,7 @@ struct Matrix {
   /++
     Check Square Matrix
   +/
-  bool isSquare() {
+  bool isSquare() const {
     return this.row == this.col;
   }
 
@@ -522,7 +522,7 @@ struct Matrix {
   /++
     LU Decomposition
   +/
-  auto lu() {
+  auto lu() const {
     auto n = this.row;
     assert(this.isSquare);
 
@@ -605,22 +605,24 @@ struct Matrix {
   }
 
   Matrix invU() {
+    Matrix res;
+
     if (this.row == 1) {
-      auto m = this.data;
-      m[0][0] = 1 / this.data[0][0];
-      return Matrix(m);
+      double[][] m = this.data;
+      m[0][0] = 1 / m[0][0];
+      res = Matrix(m);
     } else if (this.row == 2) {
-      auto m = this.data;
+      double[][] m = this.data;
       auto a = m[0][0];
       auto b = m[0][1];
       auto c = m[1][1];
       auto d = a * c;
 
       m[0][0] = 1 / a;
-      m[0][1] = - b / d;
+      m[0][1] = -b / d;
       m[1][1] = 1 / c;
 
-      return Matrix(m);
+      res = Matrix(m);
     } else {
       auto u1 = this.block(1);
       auto u2 = this.block(2);
@@ -632,8 +634,10 @@ struct Matrix {
       auto m4 = u4.invU;
       auto m2 = (m1 % u2 % m4) * (-1);
 
-      return combine(m1, m2, m3, m4);
+      res = combine(m1, m2, m3, m4);
     }
+
+    return res;
   }
 
   /++
