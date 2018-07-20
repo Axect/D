@@ -7,11 +7,7 @@ void main() {
 
     Matrix a = Matrix([[1,2],[3,4]]);
     a.writeln;
-    auto res = a.lu;
-    res[1].writeln;
-    a.writeln;
-    res[1].invU.writeln;
-    a.writeln;
-    a.inv.writeln;
-    a.writeln;
+    auto bias = Matrix(cast(double)-1, a.row, 1);
+    bias.writeln;
+    cbind(bias, a).writeln;
 }

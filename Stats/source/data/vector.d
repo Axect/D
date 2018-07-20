@@ -22,12 +22,12 @@ struct Vector {
     }
   }
 
-  /++
-    Uninitialized
-  +/
-  this(long l) {
-    this.comp.length = l;
-  }
+  // /++
+  //   Uninitialized
+  // +/
+  // this(long l) {
+  //   this.comp.length = l;
+  // }
 
   /++
     array to Vector
@@ -286,13 +286,13 @@ struct Matrix {
   /++
     Uninitialized Matrix
   +/
-  this(long r, long c, bool byrow = false) {
-    this.val = Vector(r*c);
-    this.row = r;
-    this.col = c;
-    this.byRow = byrow;
-    this.data = this.matForm;
-  }
+  // this(long r, long c, bool byrow = false) {
+  //   this.val = Vector(r*c);
+  //   this.row = r;
+  //   this.col = c;
+  //   this.byRow = byrow;
+  //   this.data = this.matForm;
+  // }
 
   this(Vector vec, long r, long c, bool byrow = false) {
     this.val = vec;
