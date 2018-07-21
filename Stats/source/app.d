@@ -9,12 +9,8 @@ void main() {
   auto a = Tensor([1,2,3,4],true);
   a.writeln;
 
-  auto b = Tensor([1,2,3,4],false);
-  b.writeln;
 
-  auto c = Tensor([[1,2],[3,4]]);
-  c.writeln;
-
-  a.nrow.writeln;
-  a.ncol.writeln;
+  (a + 1).writeln;
+  (1 + a).writeln;
+  (a + a).writeln;
 }

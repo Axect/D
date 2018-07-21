@@ -1,8 +1,13 @@
 module data.tensor;
 
 
-
+/++
+    Tensor - Lightweight Numerical Structrue
++/
 struct Tensor {
+    /++
+        Main Components
+    +/
     double[][] data;
 
     /++
@@ -57,14 +62,224 @@ struct Tensor {
     /++
         Return row (Same as R)
     +/
-    auto nrow() const {
+    pure auto nrow() {
         return this.data.length;
     }
 
     /++
         Return col (Same as R)
     +/
-    auto ncol() const {
+    pure auto ncol() {
         return this.data[0].length;
     }
+
+    // =========================================================================
+    // Operator Overloading
+    // =========================================================================
+    /++
+        Getter
+    +/
+    pure double opIndex(size_t i, size_t j) const {
+        return this.data[i][j];
+    }
+
+    /++
+        Setter
+    +/
+    void opIndexAssign(double value, size_t i, size_t j) {
+        this.data[i][j] = value;
+    }
+
+    /++
+        Unary Operator
+    +/
+    Tensor opUnary(string op)() {
+        auto temp = Tensor(this.nrow, this.ncol);
+
+        switch(op) {
+            case "-":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = - memrow[j];
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return temp;
+    }
+
+    /++
+        Binary Operator with Scalar
+    +/
+    Tensor opBinary(string op)(double rhs) {
+        auto temp = Tensor(this.nrow, this.ncol);
+
+        switch(op) {
+            case "+":
+                foreach(i, ref rows; temp.data) {
+                    auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] + rhs;
+                    }
+                }
+                break;
+            case "-":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] - rhs;
+                    }
+                }
+                break;
+            case "*":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] * rhs;
+                    }
+                }
+                break;
+            case "/":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] / rhs;
+                    }
+                }
+                break;
+            case "^^":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] ^^ rhs;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return temp;
+    }
+
+    /++
+        Binary Operator (Right) with Scalar
+    +/
+    Tensor opBinaryRight(string op)(double lhs) {
+        auto temp = Tensor(this.nrow, this.ncol);
+
+        switch(op) {
+            case "+":
+                foreach(i, ref rows; temp.data) {
+                    auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] + lhs;
+                    }
+                }
+                break;
+            case "-":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] - lhs;
+                    }
+                }
+                break;
+            case "*":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] * lhs;
+                    }
+                }
+                break;
+            case "/":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] / lhs;
+                    }
+                }
+                break;
+            case "^^":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow[j] ^^ lhs;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return temp;
+    }
+
+    /++
+        Binary Operator with Tensor
+    +/
+    Tensor opBinary(string op)(Tensor rhs) {
+        auto temp = Tensor(this.nrow, this.ncol);
+
+        switch(op) {
+            case "+":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow1 = this.data[i][];
+                    pure auto memrow2 = rhs.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow1[j] + memrow2[j];
+                    }
+                }
+                break;
+            case "-":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow1 = this.data[i][];
+                    pure auto memrow2 = rhs.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow1[j] - memrow2[j];
+                    }
+                }
+                break;
+            case "*":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow1 = this.data[i][];
+                    pure auto memrow2 = rhs.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow1[j] * memrow2[j];
+                    }
+                }
+                break;
+            case "/":
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow1 = this.data[i][];
+                    pure auto memrow2 = rhs.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = memrow1[j] / memrow2[j];
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return temp;
+    }
+
+    // =========================================================================
+    // Operators (Utils)
+    // =========================================================================
+    /++
+        Function apply whole tensor
+    +/
+    Tensor fmap(double delegate(double) f) {
+        Tensor temp = Tensor(this.nrow, this.ncol);
+        foreach (i, ref rows; temp.data) {
+            foreach (j, ref elem; rows) {
+                elem = f(this.data[i][j]);
+            }
+        }
+        return temp;
+    }
+
 }
