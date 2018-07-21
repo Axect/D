@@ -1,6 +1,5 @@
 module data.tensor;
 
-
 /++
     Tensor - Lightweight Numerical Structrue
 +/
