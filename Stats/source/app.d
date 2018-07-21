@@ -14,4 +14,7 @@ void main() {
 
   auto c = Tensor([[1,2],[3,4]]);
   c.writeln;
+
+  a.nrow.writeln;
+  a.ncol.writeln;
 }

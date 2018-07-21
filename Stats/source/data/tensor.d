@@ -5,6 +5,9 @@ module data.tensor;
 struct Tensor {
     double[][] data;
 
+    /++
+        Constructor of single row(true) or column(false)
+    +/
     this(double[] vec, bool byRow = true) {
         if (byRow) {
             this.data.length = 1;
@@ -49,5 +52,19 @@ struct Tensor {
         foreach(i, ref rows; this.data) {
             rows.length = col;
         }
+    }
+
+    /++
+        Return row (Same as R)
+    +/
+    auto nrow() const {
+        return this.data.length;
+    }
+
+    /++
+        Return col (Same as R)
+    +/
+    auto ncol() const {
+        return this.data[0].length;
     }
 }
