@@ -22,13 +22,6 @@ struct Vector {
     }
   }
 
-  // /++
-  //   Uninitialized
-  // +/
-  // this(long l) {
-  //   this.comp.length = l;
-  // }
-
   /++
     array to Vector
   +/
@@ -152,27 +145,41 @@ struct Vector {
     Binary Operator with Scalar
   +/
   Vector opBinary(string op)(double rhs) {
-    Vector temp = Vector(this.comp);
+    double[] temp;
+    auto l = this.comp.length;
+    temp.length = l;
+    temp[] = 0;
+
     switch(op) {
       case "+":
-        temp.add_void(rhs);
+        foreach(i; 0 .. l) {
+          temp[i] = this.comp[i] + rhs;
+        }
         break;
       case "-":
-        temp.sub_void(rhs);
+        foreach(i; 0 .. l) {
+          temp[i] = this.comp[i] - rhs;
+        }
         break;
       case "*":
-        temp.mul_void(rhs);
+        foreach(i; 0 .. l) {
+          temp[i] = this.comp[i] * rhs;
+        }
         break;
       case "/":
-        temp.div_void(rhs);
+        foreach(i; 0 .. l) {
+          temp[i] = this.comp[i] / rhs;
+        }
         break;
       case "^^":
-        temp.pow_void(rhs);
+        foreach(i; 0 .. l) {
+          temp[i] = this.comp[i] ^^ rhs;
+        }
         break;
       default:
         break;
     }
-    return temp;
+    return Vector(temp);
   }
 
   /++
@@ -282,17 +289,6 @@ struct Matrix {
     this.byRow = byrow;
     this.data = this.matForm; // heavy cost
   }
-
-  /++
-    Uninitialized Matrix
-  +/
-  // this(long r, long c, bool byrow = false) {
-  //   this.val = Vector(r*c);
-  //   this.row = r;
-  //   this.col = c;
-  //   this.byRow = byrow;
-  //   this.data = this.matForm;
-  // }
 
   this(Vector vec, long r, long c, bool byrow = false) {
     this.val = vec;
