@@ -1,7 +1,7 @@
 module app;
 
-import data.vector;
 import data.tensor;
+import data.linalg;
 
 void main() {
   import std.stdio : writeln;
@@ -23,4 +23,6 @@ void main() {
 
   (a.transpose % a).writeln;
   (a % a.transpose).writeln;
+
+  b.det.writeln;
 }
