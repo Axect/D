@@ -59,6 +59,19 @@ struct Tensor {
     }
 
     /++
+        Copy Matrix
+    +/
+    this(Tensor m) {
+        this.data.length = m.nrow;
+        foreach(i, ref rows; this.data) {
+            rows.length = m.ncol;
+            foreach(j, ref elem; rows) {
+                elem = m[i, j];
+            }
+        }
+    }
+
+    /++
         Return row (Same as R)
     +/
     pure auto nrow() {
