@@ -14,4 +14,11 @@ void main() {
   (1 + a).writeln;
   (a + a).writeln;
   (-a).writeln;
+
+  auto b = Tensor([[1,2],[3,4]]);
+  b.writeln;
+  (b % b).writeln;
+
+  (a.transpose % a).writeln;
+  (a % a.transpose).writeln;
 }

@@ -259,6 +259,18 @@ struct Tensor {
                     }
                 }
                 break;
+            case "%":
+                temp = Tensor(this.nrow, rhs.ncol);
+                foreach(i, ref rows; temp.data) {
+                    pure auto memrow1 = this.data[i][];
+                    foreach(j, ref elem; rows) {
+                        elem = 0;
+                        foreach(k; 0 .. this.ncol) {
+                            elem += memrow1[k] * rhs.data[k][j];
+                        }
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -276,6 +288,19 @@ struct Tensor {
         foreach (i, ref rows; temp.data) {
             foreach (j, ref elem; rows) {
                 elem = f(this.data[i][j]);
+            }
+        }
+        return temp;
+    }
+
+    /++
+        Transpose
+    +/
+    Tensor transpose() {
+        Tensor temp = Tensor(this.ncol, this.nrow);
+        foreach(i, ref rows; temp.data) {
+            foreach(j, ref elem; rows) {
+                elem = this.data[j][i];
             }
         }
         return temp;
