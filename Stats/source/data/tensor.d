@@ -286,8 +286,9 @@ struct Tensor {
     Tensor fmap(double delegate(double) f) {
         Tensor temp = Tensor(this.nrow, this.ncol);
         foreach (i, ref rows; temp.data) {
+            pure auto memrow1 = this.data[i][];
             foreach (j, ref elem; rows) {
-                elem = f(this.data[i][j]);
+                elem = f(memrow1[j]);
             }
         }
         return temp;

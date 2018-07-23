@@ -17,6 +17,8 @@ void main() {
 
   auto b = Tensor([[1,2],[3,4]]);
   b.writeln;
+  b.fmap(x => x ^^ 2 + 2 * x).writeln;
+  (b^^2 + 2 * b).writeln;
   (b % b).writeln;
 
   (a.transpose % a).writeln;
