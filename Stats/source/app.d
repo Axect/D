@@ -2,6 +2,7 @@ module app;
 
 import data.tensor;
 import data.linalg;
+import data.utils;
 
 void main() {
   import std.stdio : writeln;
@@ -18,4 +19,7 @@ void main() {
   a.writeln;
   auto c = Tensor([1,2,3,4], false);
   c.writeln;
+
+  cbind(a,a).writeln;
+  rbind(a,a).writeln;
 }
