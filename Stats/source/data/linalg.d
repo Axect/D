@@ -3,6 +3,9 @@ module data.linalg;
 import data.tensor;
 import std.typecons : tuple;
 
+/++
+    Identity Matrix
++/
 Tensor eye(long n) {
     auto I = Tensor(0, n, n);
     foreach(i, ref rows; I.data) {
@@ -11,6 +14,9 @@ Tensor eye(long n) {
     return I;
 }
 
+/++
+    LU Decomposition
++/
 auto lu(Tensor m) {
     auto n = m.nrow;
 
@@ -41,6 +47,9 @@ auto lu(Tensor m) {
     return tuple(l, u);
 }
 
+/++
+    Determinant
++/
 auto det(Tensor m) {
     auto u = m.lu[1];
     double s = 1;
@@ -51,6 +60,9 @@ auto det(Tensor m) {
     return s;
 }
 
+/++
+    Block partitioning Matrix (Tuple(mat11, mat12, mat21 mat22))
++/
 auto block(Tensor m) {
     auto r = m.nrow;
     auto l = r / 2;
@@ -80,6 +92,27 @@ auto block(Tensor m) {
     return tuple(t1, t2, t3, t4);
 }
 
+/++
+    Inverse
++/
+Tensor inv(Tensor m) {
+    auto res = m.lu;
+    auto l = res[0];
+    auto u = res[1];
+
+    auto linv = l.invL;
+    auto uinv = u.invU;
+
+    return uinv % linv;
+}
+
+// =============================================================================
+// Back-End Utils
+// =============================================================================
+
+/++
+    Four Matrix to one Matrix
++/
 Tensor combine(Tensor a, Tensor b, Tensor c, Tensor d) {
     auto x1 = a.ncol;
     auto x2 = b.ncol;
@@ -112,17 +145,9 @@ Tensor combine(Tensor a, Tensor b, Tensor c, Tensor d) {
     return m;
 }
 
-Tensor inv(Tensor m) {
-    auto res = m.lu;
-    auto l = res[0];
-    auto u = res[1];
-
-    auto linv = l.invL;
-    auto uinv = u.invU;
-
-    return uinv % linv;
-}
-
+/++
+    Inverse of Low Triangular Matrix
++/
 Tensor invL(Tensor l) {
     auto r = l.nrow;
     auto m = Tensor(l);
@@ -148,6 +173,9 @@ Tensor invL(Tensor l) {
     }
 }
 
+/++
+    Inverse of Upper triangular matrix
++/
 Tensor invU(Tensor u) {
     auto r = u.nrow;
     auto m = Tensor(u);
