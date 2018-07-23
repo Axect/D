@@ -13,4 +13,5 @@ void main() {
   (a + 1).writeln;
   (1 + a).writeln;
   (a + a).writeln;
+  (-a).writeln;
 }
