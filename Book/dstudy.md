@@ -37,12 +37,12 @@ $ dmd hello.d
 * `-unittest` : compile in unit tests
 * `-w` : warnings as errors
 * `-run` : Compiles source code and execute
-* `-o` : Output file
+* `-of=` : Output file
 
 For example,
 
 ```d
-$ dmd hello.d -o hello -de -w -unittest -run
+$ dmd hello.d -of=hello -de -w -unittest -run
 ```
 
 \pagebreak
@@ -162,3 +162,107 @@ Type | Definition | Initial Value
 \pagebreak
 
 ### 1) Properties of types
+
+D types have _properties_.
+
+* `.stringof` : name of the type
+* `.sizeof` : length of the type in terms of bytes
+* `.min` : minimum value
+* `.max` : maximum value
+* `.init` : initial value
+
+Example :
+
+```d
+// code/prop.d
+import std.stdio : writeln;
+
+void main() {
+    writeln("Type            : ", int.stringof);
+    writeln("Length in bytes : ", int.sizeof);
+    writeln("Minimum value   : ", int.min);
+    writeln("Maximum value   : ", int.max);
+    writeln("Initial value   : ", int.init);
+}
+```
+
+## 5. Assignment and Order of Evaluation
+
+### 1) The assignment operation
+
+You can assign value for variable with `=` operator :
+
+```d
+a = 10;
+b = 20;
+```
+
+### 2) Order of evaluation
+
+The operations of a program are applied step by step in the order that they appear in the program.
+
+```d
+a = 10;
+b = 20;
+a = b;
+```
+
+Final result is : `a = 20, b = 20`
+
+\pagebreak
+
+## 6. Variables
+
+In previous chapter, we learned how to assign values to variables. But, in real, we can't. Next code occur error.
+
+```d
+import std.stdio : writeln;
+
+void main() {
+    a = 10; // Error!
+    a.writeln; // You can also write this way
+}
+```
+
+We should declare variable's definition before assign values.
+
+```d
+import std.stdio : writeln;
+
+void main() {
+    int a; // Declare integer a
+    a.writeln; // Print initialize value of a
+    a = 10; // Assign after declared. -> Okay!
+    a.writeln; // Now 10
+}
+```
+
+Or can do both declare and assign simultaneously.
+
+```d
+import std.stdio : writeln;
+
+void main() {
+    int a = 10; // Declare and Assign together!
+    a.writeln;
+}
+```
+
+\pagebreak
+
+## 8. Reading from the Standard Input
+
+Reading is also easy.
+
+```d
+// code/age.d
+import std.stdio : readf, write, writeln;
+
+void main() {
+    write("How old are you?");
+
+    int age;
+    readf("%s", &age);
+    writeln("Got it: Your age is ", age);
+}
+```
