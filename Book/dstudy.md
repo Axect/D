@@ -266,3 +266,56 @@ void main() {
     writeln("Got it: Your age is ", age);
 }
 ```
+
+But there is a caveat. For some multiple read, you should insert space before `%s`.
+
+```d
+write("What's your age? ");
+int age;
+readf("%s", &age);
+
+write("What's your favorite number? ");
+int num;
+readf("%s", &num); // Runtime Exception! (Not compile error)
+```
+
+Thus, you should modify this code to :
+
+```d
+// code/profile.d
+import std.stdio;
+
+void main() {
+    write("What's your age? ");
+    int age;
+    readf(" %s", &age);
+
+    write("What's your favorite number? ");
+    int num;
+    readf(" %s", &num);
+
+    writeln("Your age is ", age, " and your favorite number is ", num);
+}
+```
+
+\pagebreak
+
+### 2) Additional Information
+
+You can write comment as follows :
+
+```d
+// Single line of comment
+
+/*
+    Multiple lines of comment
+*/
+
+/+
+    It also
++/
+
+/++
+    General documentation information comment
++/
+```
