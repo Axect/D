@@ -288,7 +288,7 @@ import std.stdio;
 void main() {
     write("What's your age? ");
     int age;
-    readf(" %s", &age);
+    readf(" %s", &age); // White space needed!
 
     write("What's your favorite number? ");
     int num;
@@ -300,7 +300,7 @@ void main() {
 
 \pagebreak
 
-### 2) Additional Information
+### Additional Information
 
 You can write comment as follows :
 
