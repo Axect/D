@@ -1,9 +1,9 @@
 module app;
 
-import data.tensor;
-import data.linalg;
-import data.utils;
-import data.stats;
+import dnum.tensor;
+import dnum.linalg;
+import dnum.utils;
+import dnum.stats;
 
 void main() {
   import std.stdio : writeln;
@@ -28,4 +28,6 @@ void main() {
   rbind(a,a,a).writeln;
 
   cov(c,c).writeln;
+
+  cov(b).writeln;
 }
