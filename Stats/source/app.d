@@ -14,4 +14,7 @@ void main() {
   auto b = Tensor([1,2,3,4], Shape.Col);
   b.writeln;
   b.transpose.writeln;
+
+  auto c = rand(4,3);
+  c.writeln;
 }
