@@ -10,9 +10,18 @@ void main() {
       writeln("Col");
       break;
   }
+  test(a);
 }
 
 enum Shape {
   Row,
   Col
+}
+
+void test(Shape a) {
+  if (a == Shape.Row) {
+    writeln("Row");
+  } else {
+    writeln("Col");
+  }
 }
