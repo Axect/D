@@ -1,12 +1,34 @@
-import std.stdio : writeln;
+import std.stdio : write, writeln;
+import std.math : sin, cos, tan, PI, exp, log;
 
 void main() {
-  auto x = Dual(1, 1);
-  (x^^2 + 2*x).writeln;
+  //auto x = Dual(1, 1);
+  //(x^^2 + 2*x + 1).writeln;
+  write("Y = ");
   auto y = Dual(0, 1);
+  y.writeln;
+  write("sin Y = ");
   sin(y).writeln;
+  write("cos Y = ");
   cos(y).writeln;
+  write("tan Y = ");
+  tan(y).writeln;
+  write("sin Y * cos Y = ");
+  f(y).writeln;
+
+  write("Z = ");
+  auto z = Dual(1,1);
+  z.writeln;
+  write("exp Z = ");
+  exp(z).writeln;
+  write("log Z = ");
+  log(z).writeln;
 }
+
+Dual f(Dual t) {
+  return sin(t) * cos(t);
+}
+
 
 struct Dual {
   import std.math : log;
@@ -93,8 +115,6 @@ struct Dual {
 // =============================================================================
 // AD for special functions
 // =============================================================================
-import std.math : sin, cos;
-
 Dual sin(Dual t) {
   auto x = t.x;
   auto dx = t.dx;
@@ -105,4 +125,23 @@ Dual cos(Dual t) {
   auto x = t.x;
   auto dx = t.dx;
   return Dual(cos(x), -sin(x) * dx);
+}
+
+Dual tan(Dual t) {
+  auto x = t.x;
+  auto dx = t.dx;
+  return Dual(tan(x), (1 / cos(x))^^2 * dx);
+}
+
+Dual exp(Dual t) {
+  auto x = t.x;
+  auto dx = t.dx;
+  return Dual(exp(x), exp(x) * dx);
+}
+
+Dual log(Dual t) {
+  assert(t.x > 0, "Invalid domain (Log)");
+  auto x = t.x;
+  auto dx = t.dx;
+  return Dual(log(x), dx/x);
 }
