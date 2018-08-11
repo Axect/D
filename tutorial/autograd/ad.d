@@ -96,7 +96,7 @@ struct Dual {
         break;
       case "/":
         val = this.x / rhs.x;
-        dval = (this.dx * rhs.x - this.x * rhs.dx) / (rhs.dx ^^ 2);
+        dval = (this.dx * rhs.x - this.x * rhs.dx) / (rhs.x ^^ 2);
         break;
       case "^^":
         val = this.x ^^ rhs.x;
