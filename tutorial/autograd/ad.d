@@ -23,10 +23,16 @@ void main() {
   exp(z).writeln;
   write("log Z = ");
   log(z).writeln;
+  write("sigmoid Z = ");
+  sigmoid(z).writeln;
 }
 
 Dual f(Dual t) {
   return sin(t) * cos(t);
+}
+
+Dual sigmoid(Dual t) {
+  return 1 / (1 + exp(-t));
 }
 
 
