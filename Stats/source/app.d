@@ -10,4 +10,8 @@ void main() {
 
   auto a = Tensor([[1,2],[3,4]]);
   a.cor.writeln;
+
+  auto b = Tensor([1,2,3,4], Shape.Col);
+  b.writeln;
+  b.transpose.writeln;
 }

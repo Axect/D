@@ -76,28 +76,29 @@ pure double cov(Tensor t1, Tensor t2) {
 /++
   Covariance Tensor
 +/
-Tensor cov(Tensor t, bool byRow=false) {
+Tensor cov(Tensor t, Shape byRow = Shape.Col) {
   // Default : Consider columns as data sets
-  if (!byRow) {
-    auto cols = t.ncol;
-    auto ten = Tensor(cols, cols);
+  switch (byRow) with (Shape) {
+    case Col:
+      auto cols = t.ncol;
+      auto ten = Tensor(cols, cols);
 
-    foreach (i; 0 .. cols) {
-      foreach (j; 0 .. cols) {
-        ten[i, j] = cov(t.col(i), t.col(j));
+      foreach (i; 0 .. cols) {
+        foreach (j; 0 .. cols) {
+          ten[i, j] = cov(t.col(i), t.col(j));
+        }
       }
-    }
-    return ten;
-  } else {
-    auto rows = t.nrow;
-    auto ten = Tensor(rows, rows);
+      return ten;
+    default:
+      auto rows = t.nrow;
+      auto ten = Tensor(rows, rows);
 
-    foreach (i; 0 .. rows) {
-      foreach (j; 0 .. rows) {
-        ten[i,j] = cov(t.row(i), t.row(j));
+      foreach (i; 0 .. rows) {
+        foreach (j; 0 .. rows) {
+          ten[i,j] = cov(t.row(i), t.row(j));
+        }
       }
-    }
-    return ten;
+      return ten;
   }
 }
 
@@ -125,27 +126,28 @@ double cor(Tensor t1, Tensor t2) {
 /++
   Generic Correlation
 +/
-Tensor cor(Tensor t, bool byRow=false) {
-  if (!byRow) {
-    auto cols = t.ncol;
-    auto container = Tensor(cols,cols);
+Tensor cor(Tensor t, Shape byRow = Shape.Col) {
+  switch (byRow) with (Shape) {
+    case Col:
+      auto cols = t.ncol;
+      auto container = Tensor(cols,cols);
 
-    foreach (i; 0 .. cols) {
-      foreach (j; 0 .. cols) {
-        container[i,j] = cor(t.col(i), t.col(j));
+      foreach (i; 0 .. cols) {
+        foreach (j; 0 .. cols) {
+          container[i,j] = cor(t.col(i), t.col(j));
+        }
       }
-    }
-    return container;
-  } else {
-    auto rows = t.nrow;
-    auto container = Tensor(rows, rows);
+      return container;
+    default:
+      auto rows = t.nrow;
+      auto container = Tensor(rows, rows);
 
-    foreach (i; 0 .. rows) {
-      foreach (j; 0 .. rows) {
-        container[i, j] = cor(t.row(i), t.row(j));
+      foreach (i; 0 .. rows) {
+        foreach (j; 0 .. rows) {
+          container[i, j] = cor(t.row(i), t.row(j));
+        }
       }
-    }
-    return container;
+      return container;
   }
 }
 
@@ -188,7 +190,7 @@ Tensor rmean(Tensor t) {
 /++
     runif - generate uniform random seq
 +/
-Tensor runif(int n, double a, double b, bool byRow = true) {
+Tensor runif(int n, double a, double b, Shape byRow = Shape.Row) {
   import std.random : Random, unpredictableSeed, uniform;
 
   auto rnd = Random(unpredictableSeed);

@@ -1,7 +1,15 @@
 module dnum.tensor;
 
 /++
-    Tensor - Lightweight Numerical Structrue
+  Shape Enum
++/
+enum Shape {
+  Row,
+  Col
+}
+
+/++
+  Tensor - Lightweight Numerical Structrue
 +/
 struct Tensor {
   /++
@@ -10,18 +18,21 @@ struct Tensor {
   double[][] data;
 
   /++
-    Constructor of single row(true) or column(false)
+    Constructor of single row or column tensor
   +/
-  this(double[] vec, bool byRow = true) {
-    if (byRow) {
-      this.data.length = 1;
-      this.data[0] = vec[]; // Copy
-    } else {
-      this.data.length = vec.length;
-      foreach (i, ref rows; this.data) {
-        rows.length = 1;
-        rows[0] = vec[i];
-      }
+  this(double[] vec, Shape byRow = Shape.Row) {
+    switch (byRow) with (Shape) {
+      case Row:
+        this.data.length = 1;
+        this.data[0] = vec[]; // Copy
+        break;
+      default:
+        this.data.length = vec.length;
+        foreach (i, ref rows; this.data) {
+          rows.length = 1;
+          rows[0] = vec[i];
+        }
+        break;
     }
   }
 
