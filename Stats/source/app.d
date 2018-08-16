@@ -17,4 +17,13 @@ void main() {
 
   auto c = rand(4,3);
   c.writeln;
+
+  auto r = Range(-1, 1);
+  auto s = Size(4, 3);
+
+  auto d = runif(5, r);
+  d.writeln;
+
+  auto f = rand(s, r);
+  f.writeln;
 }
