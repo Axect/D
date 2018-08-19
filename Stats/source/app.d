@@ -26,4 +26,15 @@ void main() {
 
   auto f = rand(s, r);
   f.writeln;
+
+  import dnum.ml;
+
+  auto seq = new Sequential;
+  seq.hello;
+
+  auto act = new Activation;
+  act.hello;
+
+  test(seq);
+  test(act);
 }

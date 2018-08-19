@@ -5,35 +5,34 @@ import dnum.stats;
 import dnum.utils;
 import dnum.linalg;
 
-enum Activation {
+enum Function {
   Sigmoid,
   Tanh,
   ReLU
 }
 
-alias Layers = uint;
+interface NN {
+  void hello();
+}
 
-struct NN {
-  // =====================================================
-  //  Necessary Structures
-  // =====================================================
-  uint layers = 1; // Except Input
-  uint current = 0; // Current position; smaller than layers
-  int bias = -1; // Bias
+class Sequential : NN {
+  import std.stdio : writeln;
 
-  Tensor x;
-  Tensor y;
-  Tensor[] weights; // length = layers
-
-  this(Tensor input, Layers l) {
-    this.x = input;
-    this.layers = l;
-    this.current = 0;
-
-    auto m = input.nrow;
-    auto n = input.ncol;
+  void hello() {
+    writeln("hello");
   }
+}
 
-  void sequential(int m, int n);
-  void activation(Activation A);
+class Activation : NN {
+  import std.stdio : writeln;
+
+  void hello() {
+    writeln("hi");
+  }
+}
+
+void test(NN n) {
+  import std.stdio : writeln;
+
+  n.hello;
 }
