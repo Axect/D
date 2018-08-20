@@ -2,26 +2,6 @@ module dnum.utils;
 
 import dnum.tensor;
 
-struct Range {
-  double start;
-  double end;
-
-  this(double x, double y) {
-    this.start = x;
-    this.end = y;
-  }
-}
-
-struct Size {
-  int row;
-  int col;
-
-  this(int x, int y) {
-    this.row = x;
-    this.col = y;
-  }
-}
-
 /++
   Extract Row
 +/

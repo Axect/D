@@ -21,7 +21,20 @@ pure double sum(Tensor t) {
 }
 
 /++
-    Mean (Whole)
+  Parallel Sum - Effective to many row vector
++/
+double psum(Tensor t) {
+  import std.parallelism : taskPool;
+
+  double s = 0;
+  foreach (rows; t.data) {
+    s += taskPool.reduce!"a + b"(rows);
+  }
+  return s;
+}
+
+/++
+  Mean (Whole)
 +/
 pure double mean(Tensor t) {
   double s = 0;
@@ -156,7 +169,7 @@ Tensor cor(Tensor t, Shape byRow = Shape.Col) {
 // =============================================================================
 
 /++
-    Column Mean
+  Column Mean
 +/
 Tensor cmean(Tensor t) {
   auto temp = Tensor(0, 1, t.ncol);
@@ -168,7 +181,7 @@ Tensor cmean(Tensor t) {
 }
 
 /++
-    Row Mean
+  Row Mean
 +/
 Tensor rmean(Tensor t) {
   auto temp = Tensor(t.nrow, 1);

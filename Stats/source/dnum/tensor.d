@@ -1,13 +1,45 @@
 module dnum.tensor;
 
+// =============================================================================
+// Enum Section
+// =============================================================================
 /++
-  Shape Enum
+  Shape Enum - Row or Col
 +/
 enum Shape {
   Row,
   Col
 }
 
+/++
+  Range Struct - start, end
++/
+struct Range {
+  double start;
+  double end;
+
+  this(double x, double y) {
+    this.start = x;
+    this.end = y;
+  }
+}
+
+/++
+  Size Struct - row, col
++/
+struct Size {
+  int row;
+  int col;
+
+  this(int x, int y) {
+    this.row = x;
+    this.col = y;
+  }
+}
+
+// =============================================================================
+// Main Section
+// =============================================================================
 /++
   Tensor - Lightweight Numerical Structrue
 +/
@@ -112,24 +144,27 @@ struct Tensor {
   void opIndexAssign(double value, size_t i, size_t j) {
     this.data[i][j] = value;
   }
-
+  
   /++
-    Slice
+    opIndex with Slice
   +/
-  Tensor opIndex(long[2] ij, long[2] kl) {
-    auto idiff = ij[1] - ij[0];
-    auto jdiff = kl[1] - kl[0];
+  Tensor opIndex(Range x, Range y) {
+    auto idiff = x.end - x.start;
+    auto jdiff = y.end - y.start;
     auto result = Tensor(idiff, jdiff);
     foreach (i; 0 .. idiff) {
       foreach (j; 0 .. jdiff) {
-        result[i, j] = this.data[ij[0] + i][kl[0] + j];
+        result[i, j] = this.data[x.start + i][y.start + j];
       }
     }
     return result;
   }
-
-  long[2] opSlice(size_t dim)(long start, long end) {
-    return [start, end];
+  
+  /++
+    opSlice
+  +/
+  Range opSlice(size_t dim)(long start, long end) {
+    return Range(start, end);
   }
 
   /++
@@ -320,17 +355,12 @@ struct Tensor {
     return temp;
   }
 
-  /++
-    Comparison Operator Overloading
-  +/
-
-
   // =========================================================================
   // Operators (Utils)
   // =========================================================================
   /++
-        Function apply whole tensor
-    +/
+    Function apply whole tensor
+  +/
   Tensor fmap(double delegate(double) f) {
     Tensor temp = Tensor(this.nrow, this.ncol);
     foreach (i, ref rows; temp.data) {
@@ -343,8 +373,36 @@ struct Tensor {
   }
 
   /++
-        Transpose
-    +/
+    Function apply whole tensor - parallel - choose row or column which contain many components
+  +/
+  Tensor pmap(double delegate(double) f, Shape byRow = Shape.Col) {
+    import std.parallelism : taskPool;
+    Tensor temp = Tensor(this.nrow, this.ncol);
+
+    switch (byRow) with (Shape) {
+      case Row:
+        foreach (i, ref rows; taskPool.parallel(temp.data)) {
+          pure auto memrow1 = this.data[i][];
+          foreach (j, ref elem; rows) {
+            elem = f(memrow1[j]);
+          }
+        }
+        break;
+      default:
+        foreach (i, ref rows; temp.data) {
+          pure auto memrow1 = this.data[i][];
+          foreach (j, ref elem; taskPool.parallel(rows)) {
+            elem = f(memrow1[j]);
+          }
+        }
+        break;
+    }
+    return temp;
+  }
+
+  /++
+    Transpose
+  +/
   Tensor transpose() {
     Tensor temp = Tensor(this.ncol, this.nrow);
     foreach (i, ref rows; temp.data) {
@@ -353,5 +411,12 @@ struct Tensor {
       }
     }
     return temp;
+  }
+
+  /++
+    Alias for Transpose
+  +/
+  Tensor t() {
+    return this.transpose;
   }
 }
