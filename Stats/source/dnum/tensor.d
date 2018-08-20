@@ -114,6 +114,25 @@ struct Tensor {
   }
 
   /++
+    Slice
+  +/
+  Tensor opIndex(long[2] ij, long[2] kl) {
+    auto idiff = ij[1] - ij[0];
+    auto jdiff = kl[1] - kl[0];
+    auto result = Tensor(idiff, jdiff);
+    foreach (i; 0 .. idiff) {
+      foreach (j; 0 .. jdiff) {
+        result[i, j] = this.data[ij[0] + i][kl[0] + j];
+      }
+    }
+    return result;
+  }
+
+  long[2] opSlice(size_t dim)(long start, long end) {
+    return [start, end];
+  }
+
+  /++
     Unary Operator
   +/
   Tensor opUnary(string op)() {
@@ -188,8 +207,8 @@ struct Tensor {
   }
 
   /++
-        Binary Operator (Right) with Scalar
-    +/
+    Binary Operator (Right) with Scalar
+  +/
   Tensor opBinaryRight(string op)(double lhs) {
     auto temp = Tensor(this.nrow, this.ncol);
 
@@ -241,8 +260,8 @@ struct Tensor {
   }
 
   /++
-        Binary Operator with Tensor
-    +/
+    Binary Operator with Tensor
+  +/
   Tensor opBinary(string op)(Tensor rhs) {
     auto temp = Tensor(this.nrow, this.ncol);
 
@@ -300,6 +319,11 @@ struct Tensor {
     }
     return temp;
   }
+
+  /++
+    Comparison Operator Overloading
+  +/
+
 
   // =========================================================================
   // Operators (Utils)

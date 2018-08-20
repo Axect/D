@@ -27,4 +27,7 @@ void main() {
 
   auto s = new Sigmoid;
   s(a).writeln;
+
+  auto f = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+  f[1 .. 3, 1 .. 3].writeln;
 }
