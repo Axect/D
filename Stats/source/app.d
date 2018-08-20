@@ -29,12 +29,8 @@ void main() {
 
   import dnum.ml;
 
-  auto seq = new Sequential;
-  seq.hello;
+  auto seq = new Sequential(3, 1);
+  auto act = new Activation(Function.Sigmoid);
 
-  auto act = new Activation;
-  act.hello;
-
-  test(seq);
-  test(act);
+  test(seq, act);
 }
