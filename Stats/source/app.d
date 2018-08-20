@@ -23,7 +23,7 @@ void main() {
   auto d = runif(5, r);
   d.writeln;
 
-  import dnum.ml2;
+  import dnum.ml;
 
   auto s = new Sigmoid;
   s(a).writeln;

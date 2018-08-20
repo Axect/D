@@ -1,54 +1,27 @@
 module dnum.ml;
 
 import dnum.tensor;
-import dnum.stats;
 import dnum.utils;
 import dnum.linalg;
+import dnum.stats;
 
-enum Function {
-  Sigmoid,
-  Tanh,
-  ReLU
+import std.math;
+
+alias TF = Tensor delegate(Tensor);
+
+interface Activation {
+  Tensor opCall(Tensor x);
+  Tensor gradient(Tensor x);
 }
 
-interface NN {
-  void hello();
-}
-
-class Sequential : NN {
-  import std.stdio : writeln;
-
-  int input;
-  int output;
-
-  this(int m, int n) {
-    this.input = m;
-    this.output = n;
+class Sigmoid : Activation {
+  Tensor opCall(Tensor x) {
+    return x.fmap(t => 1 / (1 + exp(-t)));
   }
 
-  void hello() {
-    writeln("hello");
+  Tensor gradient(Tensor x) {
+    auto y = this.opCall(x);
+    return y.fmap(t => t * (1 - t));
   }
 }
 
-class Activation : NN {
-  import std.stdio : writeln;
-
-  Function act;
-
-  this(Function f) {
-    this.act = f;
-  }
-
-  void hello() {
-    writeln("hi");
-  }
-}
-
-void test(NN[] n...) {
-  import std.stdio : writeln;
-
-  foreach (ref m; n) {
-    m.hello();
-  }
-}
