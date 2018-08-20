@@ -19,18 +19,12 @@ void main() {
   c.writeln;
 
   auto r = Range(-1, 1);
-  auto s = Size(4, 3);
 
   auto d = runif(5, r);
   d.writeln;
 
-  auto f = rand(s, r);
-  f.writeln;
+  import dnum.ml2;
 
-  import dnum.ml;
-
-  auto seq = new Sequential(3, 1);
-  auto act = new Activation(Function.Sigmoid);
-
-  test(seq, act);
+  auto s = new Sigmoid;
+  s(a).writeln;
 }
