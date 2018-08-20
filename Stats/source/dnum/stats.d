@@ -167,6 +167,34 @@ Tensor cor(Tensor t, Shape byRow = Shape.Col) {
 // =============================================================================
 // Column or Row Statistics
 // =============================================================================
+/++
+  Column Sum
++/
+Tensor csum(Tensor t) {
+  auto temp = Tensor(0, 1, t.ncol);
+
+  foreach (rows; t.data) {
+    temp = temp + Tensor(rows);
+  }
+  return temp;
+}
+
+/++
+  Row Sum
++/
+Tensor rsum(Tensor t) {
+  auto temp = Tensor(t.nrow, 1);
+
+  foreach (i, ref row; temp.data) {
+    double s = 0;
+    auto memrow = t.data[i][];
+    foreach (k; 0 .. t.ncol) {
+      s += memrow[k];
+    }
+    row[0] = s;
+  }
+  return temp;
+}
 
 /++
   Column Mean
