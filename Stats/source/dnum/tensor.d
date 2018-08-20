@@ -149,12 +149,12 @@ struct Tensor {
     opIndex with Slice
   +/
   Tensor opIndex(Range x, Range y) {
-    auto idiff = x.end - x.start;
-    auto jdiff = y.end - y.start;
+    long idiff = cast(long)(x.end - x.start);
+    long jdiff = cast(long)(y.end - y.start);
     auto result = Tensor(idiff, jdiff);
     foreach (i; 0 .. idiff) {
       foreach (j; 0 .. jdiff) {
-        result[i, j] = this.data[x.start + i][y.start + j];
+        result[i, j] = this.data[cast(long)x.start + i][cast(long)y.start + j];
       }
     }
     return result;
