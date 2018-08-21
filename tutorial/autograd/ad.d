@@ -108,7 +108,7 @@ struct Dual {
             if (dx1 == 0) {
               dval = this.x ^^ rhs.x * log(rhs.x) * dx2;
             } else {
-              dval = dx2 ^^ log(this.x) + rhs.x * dx1 / this.x;
+              dval = val * (dx2 * log(this.x) + rhs.x * dx1 / this.x);
             }
         }
         break;
