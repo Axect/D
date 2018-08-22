@@ -4,6 +4,7 @@ import dnum.tensor;
 import dnum.linalg;
 import dnum.utils;
 import dnum.stats;
+import dnum.csv;
 
 void main() {
   import std.stdio : writeln;
@@ -23,12 +24,6 @@ void main() {
   auto d = runif(5, r);
   d.writeln;
 
-  import dnum.ml;
-
-  auto s = new Sigmoid;
-  s(a).writeln;
-  s.gradient(a).writeln;
-
-  auto f = Tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
-  f[1 .. 3, 1 .. 3].writeln;
+  auto df = read("test.csv", true);
+  df.writeln;
 }

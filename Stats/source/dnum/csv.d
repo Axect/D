@@ -34,6 +34,13 @@ DataFrame read(string filename, bool header = false) {
   auto file = readText(filename).chop;
   auto temp = file.split("\n");
 
+  Header head;
+
+  if (header) {
+    head = temp[0].split(",");
+    temp = temp[1 .. $][];
+  }
+
   double[][] container;
   container.length = temp.length;
   
@@ -45,5 +52,9 @@ DataFrame read(string filename, bool header = false) {
       container[i][j] = values[j].to!double;
     }
   }
-  return DataFrame(Tensor(container));
+  if (header) {
+    return DataFrame(head, Tensor(container));
+  } else {
+    return DataFrame(Tensor(container));
+  }
 }
