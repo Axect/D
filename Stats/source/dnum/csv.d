@@ -2,13 +2,10 @@ module dnum.csv;
 
 import dnum.tensor;
 
-import std.csv;
+import std.file : readText;
+import std.array : split;
 import std.conv : to;
-import std.stdio : File;
-import std.algorithm : joiner;
-import std.typecons : Tuple;
-import std.range : take, drop;
-import std.array : array;
+import std.string : chop;
 
 alias Header = string[];
 
@@ -33,21 +30,20 @@ struct DataFrame {
   }
 }
 
-DataFrame readcsv(string filename, bool header=false) {
-  auto file = File(filename, "r");
-  if (!header) {
-    auto l = file.byLine.array.length;
-    auto value = file.byLine.joiner("\n").csvReader!double;
-    double[][] container;
-    container.length = l;
-    foreach (i; 0 .. l) {
-      container[i] = value[i];
+DataFrame read(string filename, bool header = false) {
+  auto file = readText(filename).chop;
+  auto temp = file.split("\n");
+
+  double[][] container;
+  container.length = temp.length;
+  
+  foreach (i; 0.. temp.length) {
+    auto values = temp[i].split(",");
+    auto l = values.length;
+    container[i].length = l;
+    foreach (j; 0 .. l) {
+      container[i][j] = values[j].to!double;
     }
-    return DataFrame(Tensor(container));
-  } else {
-    auto value = file.byLine.joiner("\n");
-    auto h = value.csvReader(null);
-    auto t = value.drop(1).csvReader!double;
-    return DataFrame(h, Tensor(t));
   }
+  return DataFrame(Tensor(container));
 }
