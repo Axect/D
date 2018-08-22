@@ -9,6 +9,9 @@ import std.string : chop;
 
 alias Header = string[];
 
+/++
+  DataFrame - readcsv or writecsv structure
++/
 struct DataFrame {
   Header header;
   Tensor data;
@@ -30,7 +33,10 @@ struct DataFrame {
   }
 }
 
-DataFrame read(string filename, bool header = false) {
+/++
+  readcsv - Read CSV file to DataFrame
++/
+DataFrame readcsv(string filename, bool header = false) {
   auto file = readText(filename).chop;
   auto temp = file.split("\n");
 
