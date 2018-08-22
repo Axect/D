@@ -2,10 +2,11 @@ module dnum.csv;
 
 import dnum.tensor;
 
-import std.file : readText;
-import std.array : split;
+import std.file : readText, write;
+import std.array : split, join;
 import std.conv : to;
 import std.string : chop;
+import std.algorithm : map;
 
 alias Header = string[];
 
@@ -31,6 +32,9 @@ struct DataFrame {
     }
     this.header = h;
   }
+
+  // TODO : Implement Print
+  // TODO : Override Index (with Header)
 }
 
 /++
@@ -62,5 +66,29 @@ DataFrame readcsv(string filename, bool header = false) {
     return DataFrame(head, Tensor(container));
   } else {
     return DataFrame(Tensor(container));
+  }
+}
+
+/++
+  writecsv - Write DataFrame to CSV file
++/
+void writecsv(string filename, DataFrame df, bool header = false) {
+  Header head = [ df.header.join(",") ];
+  double[][] target = df.data.data;
+
+  string[] container;
+  container.length = target.length;
+
+  foreach (i; 0 .. target.length) {
+    container[i] = target[i].map!(to!string).join(",");
+  }
+  
+  if (!header) {
+    string toWrite = container.join("\n");
+    write(filename, toWrite);
+  } else {
+    string[] forWrite = join([head, container]);
+    string toWrite = forWrite.join("\n");
+    write(filename, toWrite);
   }
 }
