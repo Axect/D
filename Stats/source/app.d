@@ -28,4 +28,10 @@ void main() {
   //auto df = readcsv("test.csv", true);
   //df.writeln;
   //writecsv("test2.csv", df, true);
+  auto x = Tensor(Range(1, 10));
+  auto y = 2*x + runif(10, Range(-2, 2));
+  auto l = LinReg(x, y);
+  x.writeln;
+  l.writeln;
+  l(x).writeln;
 }

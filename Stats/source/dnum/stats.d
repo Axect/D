@@ -8,7 +8,7 @@ import std.math : sqrt;
 // Basic Statistics
 // =============================================================================
 /++
-    Summation
+  Summation
 +/
 pure double sum(Tensor t) {
   double s = 0;
@@ -55,7 +55,7 @@ pure double cov(Tensor t1, Tensor t2) {
   // Column Vector
   if (t1.isCol && t2.isCol) {
     assert(t1.nrow == t2.nrow, "Can compare only same length tensor");
-    
+
     auto l = t1.nrow;
     double mx = 0;
     double my = 0;
@@ -223,4 +223,29 @@ Tensor rmean(Tensor t) {
     row[0] = s;
   }
   return temp / t.ncol;
+}
+
+// =============================================================================
+// Statistical Learning
+// =============================================================================
+/++
+  Simple Linear Regression
++/
+struct LinReg {
+  double slope;
+  double intercept;
+
+  this(Tensor X, Tensor Y) {
+    assert(X.nrow == Y.nrow);
+
+    double n = cast(double)X.nrow;
+
+    this.slope = (n * sum(X * Y) - sum(X) * sum(Y)) / (n*sum(X^^2) - sum(X)^^2);
+    this.intercept = 1/n * (sum(Y) - this.slope * sum(X));
+  }
+
+  Tensor opCall(Tensor x) {
+    assert(x.isCol || x.isRow);
+    return slope * x + intercept;
+  }
 }
