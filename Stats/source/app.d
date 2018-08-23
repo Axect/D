@@ -23,9 +23,9 @@ void main() {
 
   auto d = runif(5, r);
   d.writeln;
-
-  auto df = readcsv("test.csv", true);
-  df.writeln;
-
-  writecsv("test2.csv", df, true);
+  
+  // CSV
+  //auto df = readcsv("test.csv", true);
+  //df.writeln;
+  //writecsv("test2.csv", df, true);
 }
