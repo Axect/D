@@ -29,6 +29,8 @@ void main() {
   //auto df = readcsv("test.csv", true);
   //df.writeln;
   //writecsv("test2.csv", df, true);
+
+  // Linear Regression
   auto x = Tensor(Range(1, 10));
   auto y = 2*x + runif(10, Range(-2, 2));
   auto l = LinReg(x, y);
@@ -36,8 +38,13 @@ void main() {
   l.writeln;
   l(x).writeln;
 
+  // Sequence, take, takeWhile
   auto g = seq(1,10);
   g.writeln;
   g.take(5).writeln;
   g.takeWhile(x => x < 6).writeln;
+
+  // zipWith
+  auto f = seq(1,5);
+  zipWith((x,y) => x + y, f, g).writeln;
 }

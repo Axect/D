@@ -216,7 +216,7 @@ Tensor rand(Size s, Range r) {
 }
 
 // =============================================================================
-// Functional Programming Tools
+// Functional Programming Tools - Unstable
 // =============================================================================
 /++
   take - take the number of components of tensor
@@ -251,5 +251,40 @@ Tensor takeWhile(Tensor t, bool delegate(double) f) {
       n++; 
     }
     return Tensor(container, Shape.Col);
+  }
+}
+
+alias DFunc = double delegate(double, double);
+alias Func = double delegate(double);
+
+/++
+  Currying
++/
+Func currying(DFunc f, double x) {
+  return t => f(x,t);
+}
+
+/++
+  zipWith
++/
+Tensor zipWith(double delegate(double, double) op, Tensor t1, Tensor t2) {
+  assert(t1.isSingle && t2.isSingle, "zipWith for not single tensor is not yet implemented");
+  import std.algorithm.comparison : min;
+  if (t1.isCol && t2.isCol) {
+    auto n = min(t1.nrow, t2.nrow);
+    auto result = Tensor(n, 1);
+    foreach(i; 0 .. n) {
+      result[i, 0] = op(t1[i,0], t2[i,0]);
+    }
+    return result;
+  } else if (t1.isRow && t2.isRow) {
+    auto n = min(t1.ncol, t2.ncol);
+    auto result = Tensor(1, n);
+    foreach(i; 0 .. n) {
+      result[0, i] = op(t1[0,i], t2[0,i]);
+    }
+    return result;
+  } else {
+    assert(false, "Both tensors should be same form! (Row vs Row or Col vs Col)");
   }
 }
