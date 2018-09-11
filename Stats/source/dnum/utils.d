@@ -5,7 +5,7 @@ import dnum.tensor;
 /++
   Create Single Tensor
 +/
-Tensor vector(int start, int end, int step = 1) {
+Tensor seq(int start, int end, int step = 1) {
   auto r = Range(start, end, step);
   return Tensor(r);
 }
@@ -221,9 +221,11 @@ Tensor rand(Size s, Range r) {
 /++
   take - take the number of components of tensor
 +/
-// Tensor take(Tensor t, int n) {
-//   assert(t.isSingle, "Use Range to extract components (see tensor.d - opIndex)");
-//   if (t.isRow) {
-//     return t[]
-//   }
-// }
+Tensor take(Tensor t, int n) {
+  assert(t.isSingle, "Use Range to extract components (see tensor.d - opIndex)");
+  if (t.isRow) {
+    return t[Range(0,0), Range(0, n-1)];
+  } else {
+    return t[Range(0, n-1), Range(0,0)];
+  }
+}

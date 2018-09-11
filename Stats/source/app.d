@@ -35,4 +35,8 @@ void main() {
   x.writeln;
   l.writeln;
   l(x).writeln;
+
+  auto g = seq(1,10);
+  g.writeln;
+  g.take(5).writeln;
 }
