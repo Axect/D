@@ -265,7 +265,7 @@ Func currying(DFunc f, double x) {
 }
 
 /++
-  zipWith
+  zipWith - zip two Tensor with operation to one tensor
 +/
 Tensor zipWith(double delegate(double, double) op, Tensor t1, Tensor t2) {
   assert(t1.isSingle && t2.isSingle, "zipWith for not single tensor is not yet implemented");
