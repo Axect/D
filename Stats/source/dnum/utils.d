@@ -222,10 +222,34 @@ Tensor rand(Size s, Range r) {
   take - take the number of components of tensor
 +/
 Tensor take(Tensor t, int n) {
-  assert(t.isSingle, "Use Range to extract components (see tensor.d - opIndex)");
+  assert(t.isSingle, "Use Range to extract components for not single tensors (see tensor.d - opIndex)");
   if (t.isRow) {
     return t[Range(0,0), Range(0, n-1)];
   } else {
     return t[Range(0, n-1), Range(0,0)];
+  }
+}
+
+/++
+  takeWhile
++/
+Tensor takeWhile(Tensor t, bool delegate(double) f) {
+  assert(t.isSingle, "You can't use take while for not single tensors");
+  if (t.isRow) {
+    int n = 0;
+    double[] container;
+    while (f(t[0, n])) {
+      container ~= t[0,n];
+      n++;
+    }
+    return Tensor(container, Shape.Row);
+  } else {
+    int n = 0;
+    double[] container;
+    while (f(t[n,0])) {
+      container ~= t[n,0];
+      n++; 
+    }
+    return Tensor(container, Shape.Col);
   }
 }

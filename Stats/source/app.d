@@ -39,4 +39,5 @@ void main() {
   auto g = seq(1,10);
   g.writeln;
   g.take(5).writeln;
+  g.takeWhile(x => x < 6).writeln;
 }
