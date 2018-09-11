@@ -3,6 +3,14 @@ module dnum.utils;
 import dnum.tensor;
 
 /++
+  Create Single Tensor
++/
+Tensor vector(int start, int end, int step = 1) {
+  auto r = Range(start, end, step);
+  return Tensor(r);
+}
+
+/++
   Extract Row
 +/
 Tensor row(Tensor t, ulong i) {
@@ -11,7 +19,6 @@ Tensor row(Tensor t, ulong i) {
   auto container = Tensor(t.data[i][], Shape.Row);
   return container;
 }
-
 
 /++
   Extract Column
@@ -39,6 +46,13 @@ pure bool isCol(Tensor t) {
 +/
 pure bool isRow(Tensor t) {
   return t.nrow == 1;
+}
+
+/++
+  Check Single
++/
+pure bool isSingle(Tensor t) {
+  return isCol(t) || isRow(t);
 }
 
 // =============================================================================
@@ -86,7 +100,7 @@ Tensor cbind(Tensor[] t...) {
 }
 
 /++
-    Row Bind (Like R Syntax)
+  Row Bind (Like R Syntax)
 +/
 Tensor rbind(Tensor t1, Tensor t2) {
   return Tensor(t1.data ~ t2.data);
@@ -111,7 +125,7 @@ auto vectorize(double delegate(double) f) {
 }
 
 /++
-    runif - generate uniform random seq
+  runif - generate uniform random seq
 +/
 Tensor runif(int n, double a, double b, Shape byRow = Shape.Row) {
   import std.random : Random, unpredictableSeed, uniform;
@@ -200,3 +214,16 @@ Tensor rand(Size s, Range r) {
 
   return container;
 }
+
+// =============================================================================
+// Functional Programming Tools
+// =============================================================================
+/++
+  take - take the number of components of tensor
++/
+// Tensor take(Tensor t, int n) {
+//   assert(t.isSingle, "Use Range to extract components (see tensor.d - opIndex)");
+//   if (t.isRow) {
+//     return t[]
+//   }
+// }

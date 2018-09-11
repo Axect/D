@@ -188,8 +188,8 @@ struct Tensor {
     opIndex with Slice
   +/
   Tensor opIndex(Range x, Range y) {
-    long idiff = cast(long)(x.end - x.start);
-    long jdiff = cast(long)(y.end - y.start);
+    long idiff = cast(long)(x.end - x.start + 1);
+    long jdiff = cast(long)(y.end - y.start + 1);
     auto result = Tensor(idiff, jdiff);
     foreach (i; 0 .. idiff) {
       foreach (j; 0 .. jdiff) {
