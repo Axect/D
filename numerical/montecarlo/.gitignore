@@ -1,0 +1,14 @@
+.dub
+docs.json
+__dummy.html
+docs/
+montecarlo.so
+montecarlo.dylib
+montecarlo.dll
+montecarlo.a
+montecarlo.lib
+montecarlo-test-*
+*.exe
+*.o
+*.obj
+*.lst
