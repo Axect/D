@@ -1,0 +1,12 @@
+{
+	"name": "fptest",
+	"authors": [
+		"Tae Geun Kim"
+	],
+	"dependencies": {
+		"fptools": "~>0.0.4"
+	},
+	"description": "Test for fptools",
+	"copyright": "Copyright © 2018, Tae Geun Kim",
+	"license": "BSD 3-clause"
+}
