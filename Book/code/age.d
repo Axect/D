@@ -4,6 +4,6 @@ void main() {
     write("How old are you? ");
 
     int age;
-    readf("%s", &age);
+    readf(" %s", &age); // White space needed
     writeln("Got it: Your age is ", age);
 }

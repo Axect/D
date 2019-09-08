@@ -41,7 +41,7 @@ $ dmd hello.d
 
 For example,
 
-```d
+```sh
 $ dmd hello.d -of=hello -de -w -unittest -run
 ```
 
