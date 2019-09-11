@@ -8,8 +8,8 @@ void main() {
   writeln("Exclude the first two elements: ", test[2 .. $]);
 
   writeln("Slices are views on the memory: ");
-  auto test2 = test;
-  auto test3 = test.dup;
+  auto const test2 = test;
+  auto const test3 = test.dup;
   test[] += 1; // increment each element by 1
   test.writeln;
   test2.writeln;
